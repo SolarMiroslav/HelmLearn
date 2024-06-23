@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  labels:
+    app: nginx
+  annotations:
+    app.kubernetes.io/managedby: {{ .Release.Service }}
+    # Quote function
+    app.kubernetes.io/managedby: {{ quote .Release.Service }}
+    # Pipeline
+    app.kubernetes.io/managedby: {{ .Release.Service | quote | upper }}
+    # Default function
+    app.kubernetes.io/name: {{ default "MYRELEASE101" .Values.releaseName }}
+    leading-white: "    {{- .Chart.Name }}  testing"
+    trailing-white: "    {{ .Chart.Name -}}  testing"
+    both-white: "    {{- .Chart.Name -}}  testing"
+    indent: " {{- .Chart.Name | indent 4 -}} "
+    nident: " {{- .Chart.Name | nindent 20 -}} " #prepends new line and 4 spaces
+spec:
+  replicas: {{ default 2 .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: ghcr.io/stacksimplify/kubenginx:4.0.0
+        ports:
+        - containerPort: 80
+        resources:
+        {{- toYaml .Values.resources | nindent 10}}

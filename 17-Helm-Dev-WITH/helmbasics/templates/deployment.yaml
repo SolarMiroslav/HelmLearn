@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  labels:
+    app: nginx  
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }} #With refers to current scope
+      anotations:
+        {{- toYaml . | nindent 8 }}
+        appManagedBy: {{ $.Release.Service }} #without dolar it would try to find it under .Values.podAnnotations. To access from root object: use $
+        chartName: {{ $.Chart.Name }}
+      {{- end }}
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: ghcr.io/stacksimplify/kubenginx:4.0.0
+        ports:
+        - containerPort: 80
+

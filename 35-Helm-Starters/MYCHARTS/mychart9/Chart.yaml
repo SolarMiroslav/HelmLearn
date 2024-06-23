@@ -1,0 +1,11 @@
+apiVersion: v2
+appVersion: "0.3.0"
+description: A Helm chart for Kubernetes
+name: mychart9
+type: application
+version: 0.1.0 #this will be not align with starter chart and will be overwriten by generator
+# also if you have subcharts in starter chart "charts" directyory, those will be copied as packaged tgz filles to new chart
+dependencies:
+- name: mychart4
+  version: "0.1.0"
+  repository: "https://stacksimplify.github.io/helm-charts/"

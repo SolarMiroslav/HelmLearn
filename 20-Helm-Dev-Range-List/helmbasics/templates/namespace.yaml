@@ -1,0 +1,7 @@
+{{- range  .Values.namespaces }} # range is taking this contect, so .name is in this context
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .name }}
+--- # separate manifests  
+{{- end }}
